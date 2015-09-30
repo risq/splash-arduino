@@ -32,7 +32,7 @@ module.exports = {
       var fixedBeta = beta * 3 > 90 ? 90 : beta * 3 < -90 ? -90 : beta * 3;
       var fixedGamma = gamma * 3 > 90 ? 90 : gamma * 3 < -90 ? -90 : gamma * 3;
       var xAxis = (fixedBeta * 1 / 90);
-      var yAxis = (gamfixedGammama * 1 / 90);
+      var yAxis = (fixedGamma * 1 / 90);
       servos.nw.to(this.rotationToServoValue(xAxis + yAxis));
       servos.ne.to(this.rotationToServoValue(xAxis - yAxis));
       servos.sw.to(this.rotationToServoValue(- xAxis + yAxis));

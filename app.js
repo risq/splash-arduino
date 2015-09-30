@@ -3,6 +3,8 @@ var io = require('socket.io-client');
 
 var plane = require('./plane.js');
 
+var paintMotor;
+
 var board = new five.Board();
 var servo, slider;
 
@@ -20,4 +22,12 @@ socket.on('orientation', function(data) {
 
 board.on("ready", function() {
   plane.init();
+  paintMotor = new five.Servo({
+    pin: 9,
+    range: [40,170]
+  });
+  this.repl.inject({
+    paint: paintMotor
+  });
+  // paintMotor.sweep();
 });
