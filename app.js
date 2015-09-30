@@ -3,10 +3,8 @@ var io = require('socket.io-client');
 
 var plane = require('./plane.js');
 
-var paintMotor;
-
 var board = new five.Board();
-var servo, slider;
+var paintMotor;
 
 var socket = io('http://192.168.31.92:5000');
 
@@ -20,6 +18,20 @@ socket.on('orientation', function(data) {
   plane.applyRotation(data.gamma, data.beta);
 });
 
+socket.on('paint start', function(data) {
+  console.log('paint start', data);
+  if (paintMotor) {
+    paintMotor.max(2000);
+  }
+});
+
+socket.on('paint stop', function(data) {
+  console.log('paint stop', data);
+  if (paintMotor) {
+    paintMotor.min(2000);
+  }
+});
+
 board.on("ready", function() {
   plane.init();
   paintMotor = new five.Servo({
@@ -29,5 +41,4 @@ board.on("ready", function() {
   this.repl.inject({
     paint: paintMotor
   });
-  // paintMotor.sweep();
 });
