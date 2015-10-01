@@ -1,10 +1,20 @@
 var io = require('socket.io-client');
+var serveStatic = require('node-static');
 
+var config = require('./config');
 var arduino = require('./server/arduino');
+
+var file = new serveStatic.Server('./public');
+
+require('http').createServer(function (request, response) {
+    request.addListener('end', function () {
+        file.serve(request, response);
+    }).resume();
+}).listen(config.staticFilesPort);
 
 arduino.init();
 
-var socket = io('http://192.168.31.92:5000');
+var socket = io(config.socketServerUrl);
 
 socket.on('connected', function() {
   console.log('connected');
