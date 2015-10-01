@@ -7,5 +7,64 @@
   </head>
   <body>
     Hello world
+
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.14/peer.min.js"></script>
+    <script>
+      navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+
+      var config = {
+        host: '192.168.31.92',
+        port: 5000,
+      };
+
+      var socket;
+      var videoStream, peerConn, peerCall;
+
+
+      $(function(){
+
+        initSocket();
+
+        peerConn = new Peer('arduino-client-t', {
+            host: config.host,
+            port: config.port,
+            path: '/peer',
+            config: {'iceServers': [
+              { url: 'stun:stun1.l.google.com:19302' },
+              { url: 'turn:numb.viagenie.ca', credential: 'muazkh', username: 'webrtc@live.com' }
+            ]}
+          }
+        );
+        navigator.getUserMedia({audio: false, video: true}, initStream, onError);
+      });
+
+      function initStream(stream) {
+        videoStream = stream;
+      }
+
+      function sendCall(id) {
+        peerCall = peerConn.call(id, videoStream);
+      }
+
+      function onError(err){
+        console.log(err);
+      }
+
+      function initSocket() {
+        socket = io('http://' + config.host + ':' + config.port);
+
+        socket.on('connected', function() {
+          console.log('connected');
+          socket.emit('register arduino video');
+        });
+
+        socket.on('request stream', function(id) {
+          console.log('request stream', id);
+          sendCall(id);
+        })
+      }
+    </script>
   </body>
 </html>

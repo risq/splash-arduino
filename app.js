@@ -18,7 +18,7 @@ var socket = io(config.socketServerUrl);
 
 socket.on('connected', function() {
   console.log('connected');
-  socket.emit('arduino');
+  socket.emit('register arduino');
 });
 
 socket.on('orientation', function(data) {
