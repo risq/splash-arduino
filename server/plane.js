@@ -23,6 +23,11 @@ module.exports = {
         range: scalingRange
       }),
     }
+
+    servos.nw.min();
+    servos.ne.min();
+    servos.sw.min();
+    servos.se.min();
   },
 
   applyRotation: function(gamma, beta) {
